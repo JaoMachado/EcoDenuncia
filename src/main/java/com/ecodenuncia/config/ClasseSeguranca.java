@@ -29,6 +29,7 @@ public class ClasseSeguranca {
                         "/boas_praticas.html",
                         "/sobre.html",
                         "/recuperar_senha.html",
+                        "/**", // Por enquanto libera todas as páginas
                         "/assets/**" // Libera tudo dentro da pasta assets (CSS, JS, Imagens)
                 ).permitAll()
                 // 2. Libera os ENDPOINTS da API para cadastro e login

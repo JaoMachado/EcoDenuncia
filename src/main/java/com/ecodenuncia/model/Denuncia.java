@@ -23,7 +23,7 @@ public class Denuncia {
 	private Long Id;
 	
 	@NotBlank(message = "Título é obrigatório")
-    private String titulo;
+        private String titulo;
 	
 	@NotBlank(message = "Descrição é obrigatoria.")
 	//Defome o valor maximo pra 500.
@@ -31,14 +31,14 @@ public class Denuncia {
 	private String descricao;
 
 	@NotBlank(message = "Localização é obrigatória")
-    private String localizacao;
+        private String localizacao;
 	
 	private String urlMidia;
 	
 	private String status;
 	
 	@Column(updatable = false) // Não deve ser atualizado depois de criado
-    private LocalDateTime dataCriacao;
+        private LocalDateTime dataCriacao;
 	
 	//Relacionamento Muitos para um
 	//Muitas Denuncias Podem ser feito por um usuario
@@ -52,8 +52,80 @@ public class Denuncia {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "inspetor_responsavel_id") // (Pode ser nulo no início)
     private Usuario inspetorResponsavel;
+
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long Id) {
+        this.Id = Id;
+    }
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getDescricao() {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public String getLocalizacao() {
+        return localizacao;
+    }
+
+    public void setLocalizacao(String localizacao) {
+        this.localizacao = localizacao;
+    }
+
+    public String getUrlMidia() {
+        return urlMidia;
+    }
+
+    public void setUrlMidia(String urlMidia) {
+        this.urlMidia = urlMidia;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public Usuario getUsuarioDenunciante() {
+        return usuarioDenunciante;
+    }
+
+    public void setUsuarioDenunciante(Usuario usuarioDenunciante) {
+        this.usuarioDenunciante = usuarioDenunciante;
+    }
+
+    public Usuario getInspetorResponsavel() {
+        return inspetorResponsavel;
+    }
+
+    public void setInspetorResponsavel(Usuario inspetorResponsavel) {
+        this.inspetorResponsavel = inspetorResponsavel;
+    }
 	
-	
+    
 	
 
 }
