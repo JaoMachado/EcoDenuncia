@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>EcoDenúncia - Sobre</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
+
+    <script src="assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
+
+    <link rel="stylesheet" href="assets/css/demo.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+          <div class="logo-header" data-background-color="dark">
+            <a href="index.html" class="logo">
+              <img
+                src="assets/img/kaiadmin/logo_light.png"
+                alt="navbar brand"
+                class="navbar-brand mt-3"
+                height="70"
+              />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+              <li class="nav-item">
+                <a href="index.html">
+                  <i class="fas fa-home"></i>
+                  <p>Início</p>
+                </a>
+                <a href="denunciar.html" class="menu-denunciar">
+                  <i class="fas fa-bullhorn"></i>
+                  <p>Denunciar</p>
+                </a>
+                <a href="administracao.html" class="menu-administracao">
+                  <i class="fas fa-cogs"></i>
+                  <p>Administração</p>
+                </a>
+                <a href="gestao.html" class="menu-gestao">
+                  <i class="fas fa-user-cog"></i>
+                  <p>Gestão</p>
+                </a>
+                <a href="estatisticas.html" class="menu-estatisticas">
+                  <i class="fas fa-chart-bar"></i>
+                  <p>Estatísticas</p>
+                </a>
+                <a href="boas_praticas.html">
+                  <i class="fas fa-globe-americas"></i>
+                  <p>Boas Práticas</p>
+                </a>
+              </li>
+              <li class="nav-item active">
+                <a href="sobre.html">
+                  <i class="fas fa-info-circle"></i>
+                  <p>Sobre</p>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="main-panel">
+        <div class="main-header">
+          <div class="main-header-logo">
+            <div class="logo-header" data-background-color="dark">
+              <a href="index.html" class="logo">
+                <img
+                  src="assets/img/kaiadmin/logo_light.png"
+                  alt="navbar brand"
+                  class="navbar-brand"
+                  height="20"
+                />
+              </a>
+              <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                  <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                  <i class="gg-menu-left"></i>
+                </button>
+              </div>
+              <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+              </button>
+            </div>
+            </div>
+          <nav
+            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+          >
+            <div class="container-fluid">
+
+              <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+
+                <li class="nav-item topbar-user dropdown hidden-caret d-none">
+                  <a
+                    class="dropdown-toggle profile-pic"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <div class="avatar-sm">
+                      <img
+                        src="assets/img/profile.jpg"
+                        alt="..."
+                        class="avatar-img rounded-circle"
+                      />
+                    </div>
+                    <span class="profile-username">
+                      <span class="op-7">Olá,</span>
+                      <span class="fw-bold">Gabriel</span>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-user animated fadeIn">
+                    <div class="dropdown-user-scroll scrollbar-outer">
+                      <li>
+                        <div class="user-box">
+                          <div class="avatar-lg">
+                            <img
+                              src="assets/img/profile.jpg"
+                              alt="image profile"
+                              class="avatar-img rounded"
+                            />
+                          </div>
+                          <div class="u-text">
+                            <h4>Gabriel</h4>
+                            <p class="text-muted">gabriel@gmail.com</p>
+                            <a
+                              href="perfil.html"
+                              class="btn btn-xs btn-secondary btn-sm"
+                              >Perfil</a
+                            >
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="logoutBtn"
+                          >Logout</a
+                        >
+                      </li>
+                    </div>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu-cadastro">
+                  <a
+                    class="profile-pic btn btn-outline-primary my-3 fw-bold"
+                    href="cadastro.html"
+                  >
+                    <i class="fas fa-user-plus me-2"></i>
+                    <div class="fw-bold">Cadastre-se</div>
+                  </a>
+                </li>
+
+                <li class="nav-item menu-login">
+                  <a
+                    class="profile-pic btn btn-outline-primary my-3 fw-bold"
+                    href="login.html"
+                  >
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    <div class="fw-bold">Entrar</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+
+          </div>
+
+        <div class="container">
+          <div class="page-inner">
+            <div
+              class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+            >
+              <div>
+                <h3 class="fw-bold mb-3">Sobre o EcoDenúncia</h3>
+                <h6 class="op-7 mb-2">Conheça nossa missão, visão e valores.</h6>
+              </div>
+            </div>
+            <div class="container py-4 d-flex justify-content-center">
+              <div class="feed-wrapper w-100">
+                <header class="text-center mb-4">
+                  <h2>Nossa História e Propósito</h2>
+                  <p class="text-muted">Juntos pela preservação ambiental.</p>
+                </header>
+
+                <article class="feed-post d-flex py-4">
+                  <div class="feed-avatar flex-shrink-0 me-3">
+                    <img src="/assets/img/kaiadmin/favicon.png" class="rounded-circle" alt="Logo EcoDenúncia" width="15px">
+                  </div>
+
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-1">
+                      <span class="fw-semibold me-2">EcoDenúncia</span>
+                      <small class="text-muted">Plataforma Ambiental</small>
+                    </div>
+
+                    <p class="mb-3">
+                      O <strong>EcoDenúncia</strong> nasceu da paixão e da necessidade de criar um canal eficaz para que cidadãos possam reportar infrações ambientais de forma rápida e segura. Acreditamos que a participação da comunidade é fundamental para a proteção do nosso planeta.
+                    </p>
+
+                    <p class="mb-3">
+                      Nossa missão é ser a ponte entre a população e os órgãos responsáveis pela fiscalização ambiental, promovendo a conscientização e a ação coletiva. Queremos empoderar cada indivíduo a ser um agente de mudança, contribuindo ativamente para um futuro mais sustentável.
+                    </p>
+                    
+                    <p class="mb-3">
+                      Através da nossa plataforma, você pode denunciar casos de desmatamento ilegal, poluição de rios e lagos, descarte irregular de lixo, maus-tratos a animais e outras práticas que prejudicam o meio ambiente. Cada denúncia é um passo em direção à justiça ambiental.
+                    </p>
+                    <p class="mb-3">
+                      Temos a responsabilidade de garantir que sua denúncia seja vista, analisada e resolvida, direcionando-a para organizações e instituições capazes de resolvê-la.
+                    </p>
+
+                    
+                  </div>
+                  
+                </article>
+
+                <article class="feed-post d-flex py-4">
+                    
+                    <div class="flex-grow-1">
+                      <div class="d-flex align-items-center mb-1">
+                        <span class="fw-semibold me-2">Nossa Equipe</span>
+                        <small class="text-muted">A força por trás da plataforma</small>
+                      </div>
+                      <p class="mb-3">
+                        Somos um time dedicado de desenvolvedores, ativistas ambientais e especialistas em dados, comprometidos em fazer a diferença. Cada membro da equipe EQFlash contribui com sua expertise para garantir que o EcoDenúncia seja uma ferramenta eficaz e fácil de usar.
+                      </p>
+                      <ul class="list-unstyled">
+                        <li><i class="fas fa-user-tie text-muted me-2"></i> Desenvolvedores: Criando a tecnologia que impulsiona a mudança.</li>
+                        <!--<li><i class="fas fa-leaf text-muted me-2"></i> Ambientalistas: Guiando nossas ações para o maior impacto positivo.</li>-->
+                        <li><i class="fas fa-chart-line text-muted me-2"></i> Analistas de Dados: Transformando informações em insights acionáveis.</li>
+                      </ul>
+                      <div class="post-media mb-3">
+                        <img src="/assets/img/kaiadmin/equipe.jpeg"
+                          alt="Imagem de equipe trabalhando" class="img-fluid rounded" width="600px">
+                      </div>
+                    </div>
+                </article>
+                <div class="feed-wrapper w-100">
+                <header class="text-center mb-4">
+                  <h2>Como Funciona</h2>
+                </header>
+
+                <article class="feed-post d-flex py-4">
+                  <div class="feed-avatar flex-shrink-0 me-3">
+                    <img src="/assets/img/kaiadmin/favicon.png" class="rounded-circle" alt="Logo EcoDenúncia" width="15px">
+                  </div>
+
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-1">
+                      <span class="fw-semibold me-2">Fluxo EcoDenúncia</span>
+                    </div>
+
+                    <p class="mb-3">
+                      <strong>1)</strong> Um usuário realiza uma denúncia hídrica da qual testemunhou através do campo "Denunciar", preenchendo o formulário da denúncia por completo.
+                  </p>
+
+                  <p class="mb-3">
+                      <strong>2)</strong> Um de nossos Inspetores (ONGs, empresas, órgãos governamentais, pessoas capacitadas, etc.) poderá assumir sua denúncia, concordando em analisar, investigar e resolver o problema descrito nela.
+                  </p>
+
+                  <p class="mb-3">
+                      <strong>3)</strong> O usuário, ou qualquer pessoa que possuir o ID de identificação da denúncia, poderá consultar o status de sua queixa através do campo de busca da página inicial. Os status podem ser: Resolvida, Em Análise ou Não Vista.
+                  </p>
+                    
+                  </div>
+                </div>
+
+              <div id="semPost" class="alert alert-info text-center w-100 d-none">
+                Conteúdo da página Sobre.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer class="footer">
+          <div class="container-fluid d-flex justify-content-between">
+            <nav class="pull-left">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="sobre.html"> Sobre </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#"> Ajuda </a>
+                </li>
+              </ul>
+            </nav>
+            <div class="copyright">
+              © 2025 - <strong>EcoDenúncia</strong>
+            </div>
+            <div>
+              Desenvolvido por <strong>EQFlash</strong>.
+            </div>
+          </div>
+        </footer>
+      </div>
+
+      </div>
+    <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+
+    <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+    <script src="assets/js/plugin/chart.js/chart.min.js"></script>
+
+    <script src="assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+    <script src="assets/js/plugin/chart-circle/circles.min.js"></script>
+
+    <script src="assets/js/plugin/datatables/datatables.min.js"></script>
+
+    <script src="assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+    <script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/world.js"></script>
+
+    <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+
+    <script src="assets/js/kaiadmin.min.js"></script>
+
+    <script>
+      $("#lineChart").sparkline([102, 109, 120, 99, 110, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#177dff",
+        fillColor: "rgba(23, 125, 255, 0.14)",
+      });
+
+      $("#lineChart2").sparkline([99, 125, 122, 105, 110, 124, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#f3545d",
+        fillColor: "rgba(243, 84, 93, .14)",
+      });
+
+      $("#lineChart3").sparkline([105, 103, 123, 100, 95, 105, 115], {
+        type: "line",
+        height: "70",
+        width: "100%",
+        lineWidth: "2",
+        lineColor: "#ffa534",
+        fillColor: "rgba(255, 165, 52, .14)",
+      });
+    </script>
+    <script src="assets/js/index.js"></script>
+  </body>
+</html>

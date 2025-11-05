@@ -1,0 +1,6 @@
+Teste Login: 
+    email: "usuario@gmail.com",
+    senha: "teste"
+
+Entrar como ADM: 
+    Digitar no console: localStorage.setItem("tipoUsuario", "Administrador");

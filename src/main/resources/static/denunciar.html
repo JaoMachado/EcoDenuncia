@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>EcoDenúncia - Realizar Denúncia</title>
+    <meta
+      content="width=device-width, initial-scale=1.0, shrink-to-fit=no"
+      name="viewport"
+    />
+    <link
+      rel="icon"
+      href="assets/img/kaiadmin/favicon.ico"
+      type="image/x-icon"
+    />
+
+    <script src="assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+      WebFont.load({
+        google: { families: ["Public Sans:300,400,500,600,700"] },
+        custom: {
+          families: [
+            "Font Awesome 5 Solid",
+            "Font Awesome 5 Regular",
+            "Font Awesome 5 Brands",
+            "simple-line-icons",
+          ],
+          urls: ["assets/css/fonts.min.css"],
+        },
+        active: function () {
+          sessionStorage.fonts = true;
+        },
+      });
+    </script>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
+
+    <link rel="stylesheet" href="assets/css/demo.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="sidebar" data-background-color="dark">
+        <div class="sidebar-logo">
+          <div class="logo-header" data-background-color="dark">
+            <a href="index.html" class="logo">
+              <img
+                src="assets/img/kaiadmin/logo_light.png"
+                alt="navbar brand"
+                class="navbar-brand mt-3"
+                height="70"
+              />
+            </a>
+            <div class="nav-toggle">
+              <button class="btn btn-toggle toggle-sidebar">
+                <i class="gg-menu-right"></i>
+              </button>
+              <button class="btn btn-toggle sidenav-toggler">
+                <i class="gg-menu-left"></i>
+              </button>
+            </div>
+            <button class="topbar-toggler more">
+              <i class="gg-more-vertical-alt"></i>
+            </button>
+          </div>
+          </div>
+        <div class="sidebar-wrapper scrollbar scrollbar-inner">
+          <div class="sidebar-content">
+            <ul class="nav nav-secondary">
+                <li class="nav-item">
+                    <a href="index.html">
+                      <i class="fas fa-home"></i>
+                      <p>Início</p>
+                    </a>
+                </li>
+                <li class="nav-item active">
+                    <a href="denunciar.html" class="menu-denunciar">
+                      <i class="fas fa-bullhorn"></i>
+                      <p>Denunciar</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="administracao.html" class="menu-administracao">
+                      <i class="fas fa-cogs"></i>
+                      <p>Administração</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="gestao.html" class="menu-gestao">
+                      <i class="fas fa-user-cog"></i>
+                      <p>Gestão</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="estatisticas.html" class="menu-estatisticas">
+                      <i class="fas fa-chart-bar"></i>
+                      <p>Estatísticas</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="boas_praticas.html">
+                      <i class="fas fa-globe-americas"></i>
+                      <p>Boas Práticas</p>
+                    </a>
+                </li>
+                <li class="nav-item"> 
+                    <a href="sobre.html">
+                      <i class="fas fa-info-circle"></i>
+                      <p>Sobre</p>
+                    </a>
+                </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="main-panel">
+        <div class="main-header">
+          <div class="main-header-logo">
+            <div class="logo-header" data-background-color="dark">
+              <a href="index.html" class="logo">
+                <img
+                  src="assets/img/kaiadmin/logo_light.png"
+                  alt="navbar brand"
+                  class="navbar-brand"
+                  height="20"
+                />
+              </a>
+              <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                  <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                  <i class="gg-menu-left"></i>
+                </button>
+              </div>
+              <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+              </button>
+            </div>
+            </div>
+          <nav
+            class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom"
+          >
+            <div class="container-fluid">
+              <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+                
+                <li class="nav-item topbar-user dropdown hidden-caret">
+                  <a
+                    class="dropdown-toggle profile-pic"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+                  >
+                    <div class="avatar-sm">
+                      <img
+                        src="assets/img/profile.jpg"
+                        alt="..."
+                        class="avatar-img rounded-circle"
+                      />
+                    </div>
+                    <span class="profile-username">
+                      <span class="op-7">Olá,</span>
+                      <span class="fw-bold">Gabriel</span>
+                    </span>
+                  </a>
+                  <ul class="dropdown-menu dropdown-user animated fadeIn">
+                    <div class="dropdown-user-scroll scrollbar-outer">
+                      <li>
+                        <div class="user-box">
+                          <div class="avatar-lg">
+                            <img
+                              src="assets/img/profile.jpg"
+                              alt="image profile"
+                              class="avatar-img rounded"
+                            />
+                          </div>
+                          <div class="u-text">
+                            <h4>Gabriel</h4>
+                            <p class="text-muted">gabriel@gmail.com</p>
+                            <a
+                              href="perfil.html"
+                              class="btn btn-xs btn-secondary btn-sm"
+                              >Perfil</a
+                            >
+                          </div>
+                        </div>
+                      </li>
+                      <li>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#" id="logoutBtn">Logout</a>
+                      </li>
+                    </div>
+                  </ul>
+                </li>
+
+                <li class="nav-item menu-cadastro d-none">
+                  <a class="profile-pic btn btn-outline-primary my-3 fw-bold" href="cadastro.html">
+                    <i class="fas fa-user-plus me-2"></i>
+                    <div class="fw-bold">Cadastre-se</div>
+                  </a>
+                </li>
+                <li class="nav-item menu-login d-none">
+                  <a class="profile-pic btn btn-outline-primary my-3 fw-bold" href="login.html">
+                    <i class="fas fa-sign-in-alt me-2"></i>
+                    <div class="fw-bold">Entrar</div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          </div>
+
+        <div class="container">
+          <div class="page-inner">
+            <div
+              class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
+            >
+              <div>
+                <h3 class="fw-bold mb-3">Realizar uma Denúncia</h3>
+                <p class="text-muted mb-0">Descreva o problema e, se possível, anexe fotos ou vídeos.</p>
+              </div>
+            </div>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8 col-md-10">
+                    <form id="formDenuncia" class="needs-validation border rounded p-4 shadow-sm" novalidate>
+
+                        <div class="mb-3">
+                            <label for="titulo" class="form-label fw-semibold">Título da Denúncia *</label>
+                            <input type="text" class="form-control" id="titulo" name="titulo" placeholder="Ex: Vazamento de água na rua principal" maxlength="150" required>
+                            <div class="invalid-feedback">Por favor, insira um título para a denúncia.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="descricao" class="form-label fw-semibold">Descrição Detalhada *</label>
+                            <textarea class="form-control" id="descricao" name="descricao" rows="5" placeholder="Descreva o máximo de detalhes possível sobre a situação, como o tempo que o problema ocorre, os impactos, etc." required></textarea>
+                            <div class="invalid-feedback">A descrição é obrigatória.</div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="tipoProblema" class="form-label fw-semibold">Tipo de Problema *</label>
+                          <select class="form-select" id="tipoProblema" name="tipoProblema" required>
+                            <option selected disabled value="">Selecione uma categoria...</option>
+                            <option value="vazamento">Vazamento de Água</option>
+                            <option value="esgoto">Esgoto a céu aberto</option>
+                            <option value="poluicao">Poluição de Rio / Lago</option>
+                            <option value="descarte_lixo">Descarte irregular de lixo</option>
+                            <option value="desmatamento">Desmatamento</option>
+                            <option value="outro">Outro</option>
+                          </select>
+                          <div class="invalid-feedback">Por favor, selecione o tipo de problema.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="endereco" class="form-label fw-semibold">Endereço da Ocorrência *</label>
+                        
+                            <input type="text" class="form-control" id="endereco" name="endereco" placeholder="Rua, número, bairro, cidade..." maxlength="250" required>
+                            <br>
+                            <div class="card-body">
+                              <div id="map" style="height: 400px; background-color: #f0f0f0; display:flex; align-items:center; justify-content:center;">
+                            </div>
+                        </div>
+                            <div class="invalid-feedback">Informe o local da denúncia.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="media" class="form-label fw-semibold">Anexar Mídia (Foto ou Vídeo)</label>
+                            <input class="form-control" type="file" id="media" name="media" accept="image/*,video/*">
+                            <div class="form-text">Anexar uma evidência visual aumenta a credibilidade da sua denúncia.</div>
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                          <input class="form-check-input" type="checkbox" id="anonimo" name="anonimo">
+                          <label class="form-check-label" for="anonimo">
+                            Desejo fazer esta denúncia anonimamente.
+                          </label>
+                          <div class="form-text">Ao marcar, seu nome de usuário não será associado publicamente a esta denúncia.</div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 fw-bold">
+                            <i class="fas fa-paper-plane me-2"></i> Enviar Denúncia
+                        </button>
+                    </form>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <footer class="footer">
+          <div class="container-fluid d-flex justify-content-between">
+            <nav class="pull-left">
+              <ul class="nav">
+                <li class="nav-item">
+                  <a class="nav-link" href="sobre.html"> Sobre </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#"> Ajuda </a>
+                </li>
+              </ul>
+            </nav>
+            <div class="copyright">
+              © 2025 - <strong>EcoDenúncia</strong>
+            </div>
+            <div>Desenvolvido por <strong>EQFlash</strong>.</div>
+          </div>
+        </footer>
+      </div>
+    </div>
+    <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+    <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="assets/js/kaiadmin.min.js"></script>
+    <script src="assets/js/index.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBR8_WpBIohyVGDDD9SUrk2K__FhLtJPAA&callback=initMap" ></script>
+    <script>
+      function initMap() {
+        // Posição inicial (São Paulo)
+        const centro = { lat: -23.5505, lng: -46.6333 };
+
+        // Instancia o mapa
+        const map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 12,
+          center: centro,
+        });
+
+        let marcadorAtual = null;
+
+        // Adiciona o ouvinte de clique no mapa
+        map.addListener("click", (e) => {
+          if (marcadorAtual) {
+            marcadorAtual.setMap(null);
+          }
+
+          // Cria o marcador na posição clicada
+          const marker = new google.maps.Marker({
+            position: e.latLng,
+            map: map,
+          });
+
+          // --- Se estiver usando a lógica de “apenas um” ---
+          marcadorAtual = marker;
+
+          // (Opcional) Mostra um InfoWindow com as coordenadas
+          const infoWindow = new google.maps.InfoWindow({
+            content: `
+              <div style="max-width: 180px;">
+                <strong>Seu Local!</strong><br>
+                Lat: ${e.latLng.lat().toFixed(5)}<br>
+                Lng: ${e.latLng.lng().toFixed(5)}
+              </div>
+            `,
+          });
+          infoWindow.open(map, marker);
+        });
+      }
+    </script>
+
+    <script>
+        // Exemplo de script de validação do Bootstrap
+        (() => {
+        'use strict'
+
+        const forms = document.querySelectorAll('.needs-validation')
+
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+
+            form.classList.add('was-validated')
+            }, false)
+        })
+        })()
+    </script>
+    <script src="assets/js/index.js"></script>
+  </body>
+</html>

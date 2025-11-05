@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalhes da Denúncia</title>
+  <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
+</head>
+<body>
+  <div class="container mt-5">
+    <a href="perfil.html" class="btn btn-outline-secondary mb-3">← Voltar ao Perfil</a>
+
+    <div class="card">
+      <div class="card-header">
+        <h4 class="card-title">Detalhes da Denúncia</h4>
+      </div>
+      <div class="card-body" id="conteudo-denuncia">
+        <!-- Os dados serão preenchidos dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simulação de banco de dados local
+    const denuncias = [
+      {
+        id: "D001",
+        descricao: "Vazamento de água em rua residencial com forte cheiro",
+        status: "Aberta",
+        endereco: "Rua Exemplo, 123 - São Paulo/SP",
+        midia: "assets/img/vazamento.jpg"
+      },
+      {
+        id: "D002",
+        descricao: "Poluição em córrego local, água escura e lixo visível",
+        status: "Em análise",
+        endereco: "Av. Rio Limpo, 456 - São Paulo/SP",
+        midia: "assets/img/poluicao.jpg"
+      }
+    ];
+
+    function getParametro(nome) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(nome);
+    }
+
+    const id = getParametro("id");
+    const denuncia = denuncias.find(d => d.id === id);
+
+    if (denuncia) {
+      document.getElementById("conteudo-denuncia").innerHTML = `
+        <p><strong>ID:</strong> ${denuncia.id}</p>
+        <p><strong>Descrição:</strong> ${denuncia.descricao}</p>
+        <p><strong>Status:</strong> ${denuncia.status}</p>
+        <p><strong>Endereço:</strong> <a href="https://www.google.com/maps/search/?q=${encodeURIComponent(denuncia.endereco)}" target="_blank">${denuncia.endereco}</a></p>
+        <p><strong>Mídia:</strong></p>
+        <img src="${denuncia.midia}" alt="Imagem da denúncia" class="img-fluid rounded shadow-sm" />
+      `;
+    } else {
+      document.getElementById("conteudo-denuncia").innerHTML = `
+        <div class="alert alert-danger">Denúncia não encontrada.</div>
+      `;
+    }
+  </script>
+  <script src="assets/js/index.js"></script>
+</body>
+</html>

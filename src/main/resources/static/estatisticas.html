@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>EcoDenúncia - Estatísticas</title>
+    <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+    <link rel="icon" href="assets/img/kaiadmin/favicon.ico" type="image/x-icon" />
+
+    <script src="assets/js/plugin/webfont/webfont.min.js"></script>
+    <script>
+        WebFont.load({
+            google: { families: ["Public Sans:300,400,500,600,700"] },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
+    </script>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
+
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+    <style>
+        /* Estilos personalizados para os gráficos */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+        }
+        
+        .card-body {
+            padding: 1.25rem;
+            overflow: hidden;
+        }
+        
+        /* Remove margens extras e ajusta o fundo */
+        .js-plotly-plot .plotly .main-svg {
+            background: transparent !important;
+            overflow: visible;
+        }
+        
+        /* Ajusta o título dos gráficos */
+        .gtitle {
+            font-family: 'Public Sans', sans-serif !important;
+            font-weight: 600 !important;
+        }
+        
+        /* Remove o grid de fundo do card que pode estar causando conflito */
+        .card {
+            background-color: #fff;
+            border: 1px solid rgba(0,0,0,.125);
+            box-shadow: 0 1px 4px 0 rgba(0,0,0,.1);
+        }
+        
+        /* Ajustes responsivos */
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="sidebar" data-background-color="dark">
+            <div class="sidebar-logo">
+                <div class="logo-header" data-background-color="dark">
+                    <a href="index.html" class="logo">
+                        <img src="assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand mt-3" height="70" />
+                    </a>
+                    <div class="nav-toggle">
+                        <button class="btn btn-toggle toggle-sidebar">
+                            <i class="gg-menu-right"></i>
+                        </button>
+                        <button class="btn btn-toggle sidenav-toggler">
+                            <i class="gg-menu-left"></i>
+                        </button>
+                    </div>
+                    <button class="topbar-toggler more">
+                        <i class="gg-more-vertical-alt"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="sidebar-wrapper scrollbar scrollbar-inner">
+                <div class="sidebar-content">
+                    <ul class="nav nav-secondary">
+                        <li class="nav-item">
+                            <a href="index.html">
+                                <i class="fas fa-home"></i>
+                                <p>Início</p>
+                            </a>
+                            <a href="denunciar.html" class="menu-denunciar">
+                                <i class="fas fa-bullhorn"></i>
+                                <p>Denunciar</p>
+                            </a>
+                            <a href="administracao.html" class="menu-administracao">
+                                <i class="fas fa-cogs"></i>
+                                <p>Administração</p>
+                            </a>
+                            <a href="gestao.html" class="menu-gestao">
+                                <i class="fas fa-user-cog"></i>
+                                <p>Gestão</p>
+                            </a>
+                        </li>
+                        <li class="nav-item active">
+                            <a href="estatisticas.html" class="menu-estatisticas">
+                                <i class="fas fa-chart-bar"></i>
+                                <p>Estatísticas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="boas_praticas.html">
+                                <i class="fas fa-globe-americas"></i>
+                                <p>Boas Práticas</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="sobre.html">
+                                <i class="fas fa-info-circle"></i>
+                                <p>Sobre</p>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-panel">
+            <div class="main-header">
+                <div class="main-header-logo">
+                    <div class="logo-header" data-background-color="dark">
+                        <a href="index.html" class="logo">
+                            <img src="assets/img/kaiadmin/logo_light.png" alt="navbar brand" class="navbar-brand" height="20" />
+                        </a>
+                        <div class="nav-toggle">
+                            <button class="btn btn-toggle toggle-sidebar">
+                                <i class="gg-menu-right"></i>
+                            </button>
+                            <button class="btn btn-toggle sidenav-toggler">
+                                <i class="gg-menu-left"></i>
+                            </button>
+                        </div>
+                        <button class="topbar-toggler more">
+                            <i class="gg-more-vertical-alt"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+                    <div class="container-fluid">
+                        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+
+                            <li class="nav-item topbar-user dropdown hidden-caret d-none">
+                                <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#" aria-expanded="false">
+                                    <div class="avatar-sm">
+                                        <img src="assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                                    </div>
+                                    <span class="profile-username">
+                                        <span class="op-7">Olá,</span>
+                                        <span class="fw-bold">Gabriel</span>
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                    <div class="dropdown-user-scroll scrollbar-outer">
+                                        <li>
+                                            <div class="user-box">
+                                                <div class="avatar-lg">
+                                                    <img src="assets/img/profile.jpg" alt="image profile" class="avatar-img rounded" />
+                                                </div>
+                                                <div class="u-text">
+                                                    <h4>Gabriel</h4>
+                                                    <p class="text-muted">gabriel@gmail.com</p>
+                                                    <a href="perfil.html" class="btn btn-xs btn-secondary btn-sm">Perfil</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="dropdown-divider"></div>
+                                            <a class="dropdown-item" href="#" id="logoutBtn">Logout</a>
+                                        </li>
+                                    </div>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item menu-cadastro">
+                                <a class="profile-pic btn btn-outline-primary my-3 fw-bold" href="cadastro.html">
+                                    <i class="fas fa-user-plus me-2"></i>
+                                    <div class="fw-bold">Cadastre-se</div>
+                                </a>
+                            </li>
+
+                            <li class="nav-item menu-login">
+                                <a class="profile-pic btn btn-outline-primary my-3 fw-bold" href="login.html">
+                                    <i class="fas fa-sign-in-alt me-2"></i>
+                                    <div class="fw-bold">Entrar</div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+
+            <div class="container">
+                <div class="page-inner">
+                    <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+                        <div>
+                            <h3 class="fw-bold mb-3">Estatísticas</h3>
+                            <h6 class="op-7 mb-2">
+                                Dados e informações sobre as denúncias ambientais.
+                            </h6>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-6 col-md-3">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-primary">
+                                                <i class="fas fa-bullhorn"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ms-3 ms-sm-0">
+                                            <div class="numbers">
+                                                <p class="card-category">Total de Denúncias</p>
+                                                <h4 class="card-title">1.250</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-success">
+                                                <i class="fas fa-check-circle"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ms-3 ms-sm-0">
+                                            <div class="numbers">
+                                                <p class="card-category">Denúncias Resolvidas</p>
+                                                <h4 class="card-title">890</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-warning">
+                                                <i class="fas fa-hourglass-half"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ms-3 ms-sm-0">
+                                            <div class="numbers">
+                                                <p class="card-category">Denúncias Pendentes</p>
+                                                <h4 class="card-title">360</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-3">
+                            <div class="card card-stats card-round">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <div class="col-icon">
+                                            <div class="icon-big text-center icon-danger">
+                                                <i class="fas fa-exclamation-triangle"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col col-stats ms-3 ms-sm-0">
+                                            <div class="numbers">
+                                                <p class="card-category">Tipo Mais Comum</p>
+                                                <h4 class="card-title">Desmatamento</h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Denúncias por Categoria</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <div id="denunciasChartDiv"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4 class="card-title">Denúncias por Região</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="chart-container">
+                                        <div id="regiaoChartDiv"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <div class="container-fluid d-flex justify-content-between">
+                    <nav class="pull-left">
+                        <ul class="nav">
+                            <li class="nav-item">
+                                <a class="nav-link" href="sobre.html"> Sobre </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"> Ajuda </a>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright">
+                        © 2025 - <strong>EcoDenúncia</strong>
+                    </div>
+                    <div>
+                        Desenvolvido por <strong>EQFlash</strong>.
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="assets/js/core/jquery-3.7.1.min.js"></script>
+    <script src="assets/js/core/popper.min.js"></script>
+    <script src="assets/js/core/bootstrap.min.js"></script>
+    <script src="assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+    <script src="assets/js/plugin/datatables/datatables.min.js"></script>
+    <script src="assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/jsvectormap.min.js"></script>
+    <script src="assets/js/plugin/jsvectormap/world.js"></script>
+    <script src="assets/js/plugin/sweetalert/sweetalert.min.js"></script>
+    <script src="assets/js/kaiadmin.min.js"></script>
+
+    <script>
+        // Função para renderizar gráficos com Plotly.js
+        function renderChartsPlotly() {
+            // Verifica se Plotly está carregado
+            if (typeof Plotly === 'undefined') {
+                console.error("Plotly.js não está carregado. Os gráficos não serão renderizados.");
+                return;
+            }
+
+            // --- Gráfico de Denúncias por Categoria (Pizza) com Plotly ---
+            var labelsDenuncias = ["Desmatamento", "Poluição Hídrica", "Poluição Sonora", "Descarte Irregular", "Outros"];
+            var dataDenuncias = [350, 200, 150, 100, 50];
+            var colorsDenuncias = ["#f3545d", "#ffa534", "#177dff", "#63ED7A", "#8A2BE2"];
+
+            var traceDenuncias = {
+                labels: labelsDenuncias,
+                values: dataDenuncias,
+                type: 'pie',
+                marker: {
+                    colors: colorsDenuncias
+                },
+                hoverinfo: 'label+percent',
+                textinfo: 'percent',
+                textposition: 'inside',
+                automargin: true,
+                insidetextorientation: 'radial',
+                textfont: {
+                    family: 'Public Sans',
+                    size: 12,
+                    color: '#fff'
+                },
+                hovertemplate: '<b>%{label}</b><br>Quantidade: %{value}<br>Percentual: %{percent}<extra></extra>',
+                // Aumenta o tamanho do buraco central para dar mais espaço
+                hole: 0.4
+            };
+
+            var layoutDenuncias = {
+                title: {
+                    text: 'Denúncias por Categoria',
+                    font: {
+                        family: 'Public Sans',
+                        size: 16,
+                        weight: 'bold'
+                    }
+                },
+                height: 400,
+                margin: {
+                    t: 60,  // top margin
+                    b: 20,  // bottom margin
+                    l: 20,  // left margin
+                    r: 150  // right margin aumentado para a legenda
+                },
+                showlegend: true,
+                legend: {
+                    orientation: 'v',
+                    yanchor: 'middle',
+                    xanchor: 'left', // Corrigido para 'left' para posicionar a partir da borda esquerda da legenda
+                    x: 0,  // Posiciona a legenda mais à direita para evitar sobreposição
+                    y: 1.4,  // *Alterado*: Movido mais para cima
+                    font: {
+                        family: 'Public Sans',
+                        size: 12
+                    },
+                    // Adiciona borda à legenda para melhor visualização
+                    bgcolor: 'rgba(255,255,255,0.8)',
+                    bordercolor: '#ddd',
+                    borderwidth: 1
+                },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                // Ajusta o tamanho do gráfico para deixar espaço para a legenda
+                width: 565  // Largura aumentada para acomodar a legenda
+            };
+
+            var configDenuncias = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot('denunciasChartDiv', [traceDenuncias], layoutDenuncias, configDenuncias);
+
+            // --- Gráfico de Denúncias por Região (Barras) com Plotly ---
+            var labelsRegiao = ["Centro", "Zona Norte", "Zona Sul", "Zona Leste", "Zona Oeste"];
+            var dataRegiao = [300, 250, 200, 180, 120];
+            var colorRegiao = "#4CAF50";
+
+            var traceRegiao = {
+                x: labelsRegiao,
+                y: dataRegiao,
+                type: 'bar',
+                marker: {
+                    color: colorRegiao,
+                    line: {
+                        color: '#388E3C',
+                        width: 1
+                    }
+                },
+                text: dataRegiao.map(String),
+                textposition: 'auto',
+                textfont: {
+                    family: 'Public Sans',
+                    size: 12,
+                    color: '#fff'
+                },
+                hovertemplate: '<b>%{x}</b><br>Quantidade: %{y}<extra></extra>'
+            };
+
+            var layoutRegiao = {
+                title: {
+                    text: 'Denúncias por Região',
+                    font: {
+                        family: 'Public Sans',
+                        size: 16,
+                        weight: 'bold'
+                    }
+                },
+                height: 400,
+                margin: {
+                    t: 60,  // top margin
+                    b: 80,  // bottom margin (aumentado para rótulos do eixo X)
+                    l: 60,  // left margin
+                    r: 20  // right margin
+                },
+                xaxis: {
+                    title: {
+                        text: 'Região',
+                        font: {
+                            family: 'Public Sans',
+                            size: 12
+                        }
+                    },
+                    tickangle: 0,
+                    showgrid: true,
+                    gridcolor: 'rgba(0,0,0,0.05)',
+                    zeroline: false
+                },
+                yaxis: {
+                    title: {
+                        text: 'Número de Denúncias',
+                        font: {
+                            family: 'Public Sans',
+                            size: 12
+                        }
+                    },
+                    rangemode: 'tozero',
+                    showgrid: true,
+                    gridcolor: 'rgba(0,0,0,0.05)',
+                    zeroline: true,
+                    zerolinecolor: 'rgba(0,0,0,0.1)'
+                },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)'
+            };
+
+            var configRegiao = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot('regiaoChartDiv', [traceRegiao], layoutRegiao, configRegiao);
+        }
+
+        // Inicializa os gráficos quando a página é carregada
+        $(document).ready(function () {
+            // Atraso para garantir que o DOM e as bibliotecas estejam totalmente carregadas
+            setTimeout(renderChartsPlotly, 100);
+            
+            // Redesenha os gráficos quando a janela é redimensionada
+            $(window).on('resize', function() {
+                Plotly.Plots.resize('denunciasChartDiv');
+                Plotly.Plots.resize('regiaoChartDiv');
+            });
+        });
+    </script>
+    <script src="assets/js/index.js"></script>
+</body>
+</html>
