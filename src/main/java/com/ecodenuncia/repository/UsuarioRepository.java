@@ -4,6 +4,7 @@
  */
 package com.ecodenuncia.repository;
 import com.ecodenuncia.model.Usuario;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -23,5 +24,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     Optional<Usuario> findByEmail(String email);
     
     Optional<Usuario> findByCpfCnpj(String cpfCnpj);
+    
+    // O Spring Data JPA vai criar a query: 
+    // "SELECT * FROM tb_usuarios WHERE status_cadastro = ?"
+    List<Usuario> findByStatusCadastro(String status);
     
 }
