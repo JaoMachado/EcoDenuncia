@@ -4,11 +4,17 @@
  */
 package com.ecodenuncia.service;
 
+import com.ecodenuncia.model.Solicitacao_senhas;
+import com.ecodenuncia.model.Solicitacao_senhas.StatusSolicitacao;
 import com.ecodenuncia.model.Usuario;
 import com.ecodenuncia.model.UsuarioPendenteDTO;
 import com.ecodenuncia.repository.UsuarioRepository;
+import com.ecodenuncia.repository.SolicitacaoSenhaRepository;
+
+import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,9 +31,17 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+    
+    @Autowired
+    private SolicitacaoSenhaRepository solicitacaoSenhaRepository;
+
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private EmailService emailService;
+
 
     @Transactional
     public Usuario cadastrar(Usuario usuario) {
@@ -90,4 +104,36 @@ public class UsuarioService {
         }
         usuarioRepository.deleteById(id);
     }
+    @Transactional
+    public void solicitarRecuperacaoSenha(String email) {
+        // 1️⃣ Verifica se o usuário existe
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        // 2️⃣ Gera um token único
+        String token = UUID.randomUUID().toString();
+
+        // 3️⃣ Verifica se já existe um token igual (raro, mas seguro)
+        while (solicitacaoSenhaRepository.existsByToken(token)) {
+            token = UUID.randomUUID().toString();
+        }
+
+        // 4️⃣ Cria uma nova solicitação de senha
+        Solicitacao_senhas solicitacao = new Solicitacao_senhas();
+        solicitacao.setUsuario(usuario);
+        solicitacao.setToken(token);
+        solicitacao.setDataSolicitacao(LocalDateTime.now());
+        solicitacao.setDataExpiracao(LocalDateTime.now().plusHours(1)); // expira em 1h
+        solicitacao.setStatus(StatusSolicitacao.PENDENTE);
+
+        solicitacaoSenhaRepository.save(solicitacao);
+
+        // 5️⃣ Envia o e-mail com o link de recuperação
+        // Exemplo de link: http://localhost:8080/cadastrar_nova_senha.html?token=abc123
+        emailService.mandar_email(usuario.getEmail(), token);
+    }
+
+   
+
+
 }
