@@ -1,69 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ecodenuncia.service;
 
-import com.ecodenuncia.model.Denuncia;
-import com.ecodenuncia.model.DenunciaDTO;
-import com.ecodenuncia.model.Usuario;
-import com.ecodenuncia.repository.DenunciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
-
-/**
- *
- * @author João Pedro Machado
- */
 
 @Service
-public class DenunciaService {
+public class EmailService {
+
     @Autowired
-    private DenunciaRepository denunciaRepository;
+    private JavaMailSender mailSender;
 
-    // Método para buscar todas e converter para DTO
-    public List<DenunciaDTO> buscarTodas() {
-        return denunciaRepository.findAll()
-                .stream()       // Transforma a lista em um stream
-                .map(DenunciaDTO::new) // Converte cada Denuncia para DenunciaDTO
-                .collect(Collectors.toList()); // Coleta em uma nova lista
-    }
+    public void mandar_email(String email, String token) {
+        System.out.println("enviando para email: " + email + "e token: " + token);
+        String link = "http://localhost:8080/validar_token?token=" + token;
+        String assunto = "Recuperação de Senha - EcoDenúncia";
+        String mensagem = "Olá! Para redefinir sua senha, acesse o link abaixo:\n\n" + link +
+                          "\n\nO link expira em 1 hora.";
 
-    // Método para um inspetor/gestor assumir a denúncia
-    public DenunciaDTO assumirDenuncia(Long id) {
-        // Pega o usuário que está LOGADO no Spring Security
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Usuario inspetorLogado = (Usuario) auth.getPrincipal();
+        SimpleMailMessage mail = new SimpleMailMessage();
+        mail.setTo(email);
+        mail.setSubject(assunto);
+        mail.setText(mensagem);
+        mail.setFrom("leo.solovijovas@gmail.com");
 
-        Denuncia denuncia = denunciaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Denúncia não encontrada!"));
+        mailSender.send(mail);
 
-        if (!"Aguardando".equals(denuncia.getStatus())) {
-            throw new RuntimeException("Esta denúncia não pode ser assumida!");
-        }
-
-        denuncia.setStatus("Em tratamento");
-        denuncia.setInspetorResponsavel(inspetorLogado); // Seta o OBJETO do inspetor
-        
-        Denuncia denunciaSalva = denunciaRepository.save(denuncia);
-        return new DenunciaDTO(denunciaSalva); // Retorna o DTO
-    }
-
-    // Método para concluir uma denúncia
-    public DenunciaDTO concluirDenuncia(Long id) {
-        Denuncia denuncia = denunciaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Denúncia não encontrada!"));
-
-        if (!"Em tratamento".equals(denuncia.getStatus())) {
-            throw new RuntimeException("Esta denúncia não pode ser concluída!");
-        }
-
-        denuncia.setStatus("Concluída");
-        Denuncia denunciaSalva = denunciaRepository.save(denuncia);
-        return new DenunciaDTO(denunciaSalva); // Retorna o DTO
+        System.out.println("📨 E-mail enviado com sucesso para: " + email);
     }
 }

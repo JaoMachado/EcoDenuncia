@@ -1,18 +1,13 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
- */
 package com.ecodenuncia.repository;
 
+import com.ecodenuncia.model.Solicitacao_senhas;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.ecodenuncia.model.Denuncia;
 import org.springframework.stereotype.Repository;
-/**
- *
- * @author gabri
- */
+import java.util.Optional;
 
 @Repository
-public interface DenunciaRepository extends JpaRepository<Denuncia, Long>{
-    
+public interface SolicitacaoSenhaRepository extends JpaRepository<Solicitacao_senhas, Long> {
+    boolean existsByToken(String token);
+    Optional<Solicitacao_senhas> findByToken(String token); 
 }
+
