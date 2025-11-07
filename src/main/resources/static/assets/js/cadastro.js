@@ -1,6 +1,7 @@
 /* --- Bootstrap + validações customizadas --- */
 
-console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH + SWAL) ---");
+
+console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH) ---");
 (() => {
     "use strict";
 
@@ -42,6 +43,7 @@ console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH + SWAL) ---");
         if (senha.value !== confSenha.value) {
             // Define o erro customizado (Fluxo Alternativo C)
             confSenha.setCustomValidity("mismatch");
+            // Força a exibição da mensagem de erro do HTML
             form.classList.add("was-validated");
         } else {
             confSenha.setCustomValidity("");
@@ -52,9 +54,9 @@ console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH + SWAL) ---");
 
     /* --- Validação de CPF/CNPJ (Formato) --- */
     const validaCpfCnpj = () => {
+        const v = cpfCnpj.value.trim();
         // Deixaremos a validação de dígitos para o back-end (Fluxo D)
         // Aqui, só checamos se o formato básico está ok (mesmo sem pontos)
-        const v = cpfCnpj.value.trim();
         if (v.length >= 11) {
             cpfCnpj.setCustomValidity("");
         } else {
@@ -87,7 +89,7 @@ console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH + SWAL) ---");
             return; // Para aqui
         }
 
-        // Se chegou aqui, o formulário é VÁLIDO.
+// Se chegou aqui, o formulário é VÁLIDO.
         console.log("--- VALIDAÇÃO OK! Enviando para a API... ---");
 
         // 5. Desabilita o botão para evitar cliques duplos
@@ -123,28 +125,19 @@ console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH + SWAL) ---");
             // 8. Trata a resposta do Back-end
             if (response.ok) { // Sucesso (HTTP 201 Created)
 
-                swal({
-                    title: "Cadastro Realizado!",
-                    text: "Seu cadastro foi enviado. Você será redirecionado para o login.",
-                    icon: "success",
-                    button: "OK"
-                }).then(() => {
-                    // Redireciona para o login APÓS o usuário clicar em "OK"
-                    window.location.href = '/login.html'; 
-                });
+                alert('Cadastro realizado com sucesso! Você será redirecionado para o login.');
+                // pausada pra testyes window.location.href = '/login.html'; // Redireciona para o login
 
             } else { // Erro (HTTP 400 Bad Request)
 
                 // Pega a mensagem de erro do back-end (ex: "E-mail já cadastrado")
                 const erroMsg = await response.text();
-                
-                // Ex: "Erro: E-mail já cadastrado"
-                swal("Erro no Cadastro", erroMsg.replace("Error ", ""), "error"); 
+                alert(`Erro ao cadastrar: ${erroMsg}`);
 
                 // Se o erro foi e-mail ou CPF, marca o campo
-                if (erroMsg.includes('E-mail') || erroMsg.includes('Email')) {
+                if (erroMsg.includes('E-mail')) {
                     email.setCustomValidity("invalid");
-                } else if (erroMsg.includes('CPF') || erroMsg.includes('Cpf') || erroMsg.includes('Cnpj')) {
+                } else if (erroMsg.includes('CPF')) {
                     cpfCnpj.setCustomValidity("invalid");
                 }
                 form.classList.add("was-validated");
@@ -153,8 +146,7 @@ console.log("--- NOVO CADASTRO.JS CARREGADO (VERSÃO FETCH + SWAL) ---");
         } catch (error) {
             // Erro de rede (ex: API fora do ar)
             console.error('Erro de rede:', error);
-            
-            swal("Erro de Conexão", "Não foi possível conectar ao servidor. Tente novamente mais tarde.", "error");
+            alert('Não foi possível conectar ao servidor. Tente novamente mais tarde.');
 
         } finally {
             // 9. Reabilita o botão, independente do resultado

@@ -1,24 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ecodenuncia.service;
 
-import com.ecodenuncia.model.Solicitacao_senhas;
-import com.ecodenuncia.model.Solicitacao_senhas.StatusSolicitacao;
 import com.ecodenuncia.model.Usuario;
-import com.ecodenuncia.model.UsuarioPendenteDTO;
+import com.ecodenuncia.model.UsuarioPendenteDTO; // Nova importação
 import com.ecodenuncia.repository.UsuarioRepository;
-import com.ecodenuncia.repository.SolicitacaoSenhaRepository;
-
-import java.time.LocalDateTime;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import jakarta.transaction.Transactional;
+import java.util.List; // Nova importação
+import java.util.stream.Collectors; // Nova importação
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -31,109 +19,103 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
-    
-    @Autowired
-    private SolicitacaoSenhaRepository solicitacaoSenhaRepository;
-
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
-    @Autowired
-    private EmailService emailService;
-
 
     @Transactional
     public Usuario cadastrar(Usuario usuario) {
+        
+        // 1. Validação de duplicados (como já estava)
         if (usuarioRepository.findByCpfCnpj(usuario.getCpfCnpj()).isPresent()) {
-            throw new RuntimeException("Error Cpf/cnpj do usuario já cadastrado!!");
+            throw new RuntimeException("Erro: Cpf/cnpj do usuario já cadastrado!!");
         }
         if (usuarioRepository.findByEmail(usuario.getEmail()).isPresent()) {
-            throw new RuntimeException("Error Email do usuario já cadastrado!!");
-        } //Sistema de criptografar senha
+            throw new RuntimeException("Erro: Email do usuario já cadastrado!!");
+        }
+        
+        // 2. Criptografar senha (como já estava)
         String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
         usuario.setSenha(senhaCriptografada);
 
-        usuario.setStatusCadastro("PENDENTE");
-
-        return usuarioRepository.save(usuario);
-
-    }
-    
-    /**
-     * Este é o método que o Spring Security (Passo 2) usa
-     * para encontrar um usuário pelo 'username' (que nós definimos como e-mail).
-     */
-    public Usuario loadUserByUsername(String email) throws UsernameNotFoundException {
-        return usuarioRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com e-mail: " + email));
-    }
-    
-    // --- MÉTODOS DA PÁGINA ADMIN (FALTANTES) ---
-
-    /**
-     * Busca todos os usuários com status "Pendente" e converte para DTO.
-     */
-    public List<UsuarioPendenteDTO> buscarUsuariosPendentes() {
-        List<Usuario> usuariosPendentes = usuarioRepository.findByStatusCadastro("PENDENTE");
         
-        return usuariosPendentes.stream()
-                .map(UsuarioPendenteDTO::new) // Converte cada Usuario para DTO
+        
+        
+        // 3. Mapeia o Tipo de Usuário (Front-end envia 'U' ou 'I')
+        String tipoUsuarioForm = usuario.getTipoUsuario();
+        
+        if ("I".equals(tipoUsuarioForm)) {
+            // Se for INSPETOR
+            usuario.setTipoUsuario("INSPETOR");
+            // Define o status para verificação (Pedido do usuário)
+            usuario.setStatusCadastro("AGUARDANDO_APROVACAO"); 
+        } else {
+            // Se for USUARIO normal
+            usuario.setTipoUsuario("USUARIO");
+            // Define o status como APROVADO direto (Pedido do usuário)
+            usuario.setStatusCadastro("APROVADO"); 
+        }
+        
+        // 4. Mapeia o Tipo de Pessoa (Front-end envia 'F' ou 'J')
+        String tipoPessoaForm = usuario.getTipoPessoa();
+        if ("F".equals(tipoPessoaForm)) {
+            usuario.setTipoPessoa("PESSOA_FISICA");
+        } else {
+            usuario.setTipoPessoa("PESSOA_JURIDICA");
+        }
+        
+        
+
+        // 5. Salva o novo usuário no banco
+        return usuarioRepository.save(usuario);
+    }
+    
+    // --- INÍCIO DOS NOVOS MÉTODOS PARA O ADMINCONTROLLER ---
+    
+    /**
+     * Busca todos os usuários com status AGUARDANDO_APROVACAO
+     * (Converte para DTO)
+     */
+    @Transactional
+    public List<UsuarioPendenteDTO> buscarUsuariosPendentes() {
+        return usuarioRepository.findAll().stream()
+                // Filtra apenas os usuários que estão aguardando
+                .filter(usuario -> "AGUARDANDO_APROVACAO".equals(usuario.getStatusCadastro()))
+                // Converte a Entidade Usuario para o DTO UsuarioPendenteDTO
+                .map(UsuarioPendenteDTO::new) 
                 .collect(Collectors.toList());
     }
 
     /**
-     * Aprova um usuário, mudando seu status para "APROVADO".
-     * (O "APROVADO" é o que o isEnabled() do Usuario.java entende)
+     * Aprova o cadastro de um usuário (muda o status)
      */
     @Transactional
-    public Usuario aprovarUsuario(Long id) {
+    public void aprovarUsuario(Long id) {
+        // Busca o usuário no banco ou lança um erro se não existir
         Usuario usuario = usuarioRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-            
-        usuario.setStatusCadastro("APROVADO"); // Muda o status
-        return usuarioRepository.save(usuario);
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+        
+        // Altera o status
+        usuario.setStatusCadastro("APROVADO");
+        
+        // Salva a alteração
+        usuarioRepository.save(usuario);
     }
 
     /**
-     * Rejeita (exclui) um usuário do banco.
+     * Rejeita o cadastro de um usuário (muda o status)
      */
     @Transactional
     public void rejeitarUsuario(Long id) {
-        if (!usuarioRepository.existsById(id)) {
-             throw new RuntimeException("Usuário não encontrado!");
-        }
-        usuarioRepository.deleteById(id);
+        // Busca o usuário no banco ou lança um erro se não existir
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado com id: " + id));
+        
+        // Altera o status para REJEITADO
+        usuario.setStatusCadastro("REJEITADO");
+        
+        // Salva a alteração
+        usuarioRepository.save(usuario);
     }
-    @Transactional
-    public void solicitarRecuperacaoSenha(String email) {
-        // 1️⃣ Verifica se o usuário existe
-        Usuario usuario = usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
-
-        // 2️⃣ Gera um token único
-        String token = UUID.randomUUID().toString();
-
-        // 3️⃣ Verifica se já existe um token igual (raro, mas seguro)
-        while (solicitacaoSenhaRepository.existsByToken(token)) {
-            token = UUID.randomUUID().toString();
-        }
-
-        // 4️⃣ Cria uma nova solicitação de senha
-        Solicitacao_senhas solicitacao = new Solicitacao_senhas();
-        solicitacao.setUsuario(usuario);
-        solicitacao.setToken(token);
-        solicitacao.setDataSolicitacao(LocalDateTime.now());
-        solicitacao.setDataExpiracao(LocalDateTime.now().plusHours(1)); // expira em 1h
-        solicitacao.setStatus(StatusSolicitacao.PENDENTE);
-
-        solicitacaoSenhaRepository.save(solicitacao);
-
-        // 5️⃣ Envia o e-mail com o link de recuperação
-        // Exemplo de link: http://localhost:8080/cadastrar_nova_senha.html?token=abc123
-        emailService.mandar_email(usuario.getEmail(), token);
-    }
-
-   
-
-
+    // --- FIM DOS NOVOS MÉTODOS ---
 }

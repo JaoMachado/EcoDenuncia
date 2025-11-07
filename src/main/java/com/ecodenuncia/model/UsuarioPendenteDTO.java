@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.ecodenuncia.model;
 
 /**
@@ -9,7 +5,7 @@ package com.ecodenuncia.model;
  * @author João Pedro Machado
  */
 
-// Este DTO vai carregar SÓ os dados que a tabela da sua imagem precisa
+// Este DTO vai carregar SÓ os dados que a sua página de admin precisa
 public class UsuarioPendenteDTO {
 
     private Long id;

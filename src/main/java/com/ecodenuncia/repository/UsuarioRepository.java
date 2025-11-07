@@ -24,7 +24,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
     Optional<Usuario> findByEmail(String email);
     
     Optional<Usuario> findByCpfCnpj(String cpfCnpj);
-    boolean existsByEmail(String email);
     
     // O Spring Data JPA vai criar a query: 
     // "SELECT * FROM tb_usuarios WHERE status_cadastro = ?"

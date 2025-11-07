@@ -11,15 +11,19 @@ function renderTabela() {
     const mensagem = document.getElementById('mensagemSemInspetor');
 
     if (usuariosPendentes.length === 0) {
+        // Se o array (que veio do banco) estiver vazio
         mensagem?.classList.remove('d-none');
         tbody.innerHTML = '<tr><td colspan="5" class="text-center">Nenhum cadastro pendente.</td></tr>';
         return;
     } 
     
+    // Esconde a mensagem se tiver dados
     mensagem?.classList.add('d-none');
     
+    // Cria as linhas da tabela
     usuariosPendentes.forEach(user => {
         const tr = document.createElement('tr');
+        // Usamos os nomes do DTO (id, nome, email, etc.)
         tr.innerHTML = `
             <td>${user.nome}</td>
             <td>${user.email}</td>
@@ -38,78 +42,54 @@ function renderTabela() {
  * NOVA FUNÇÃO: Chama a API para APROVAR um usuário
  * @param {number} id - O ID do usuário (vem do DTO)
  */
-window.aprovar = function(id) {
-    // <<< MUDANÇA: Substituído o 'confirm()' por 'swal()'
-    swal({
-        title: "Aprovar Inspetor?",
-        text: "Tem certeza que deseja aprovar este cadastro?",
-        icon: "info",
-        buttons: {
-            cancel: "Cancelar", // Texto do botão de cancelar
-            confirm: "Aprovar"  // Texto do botão de confirmar
-        },
-    }).then(async (vaiAprovar) => {
-        // O 'try/catch' agora vai DENTRO do '.then()'
-        if (vaiAprovar) {
-            try {
-                const response = await fetch(`/api/admin/aprovar/${id}`, {
-                    method: 'POST'
-                });
+window.aprovar = async function(id) {
+    if (!confirm('Tem certeza que deseja aprovar este inspetor?')) {
+        return;
+    }
+    
+    try {
+        // Chama o endpoint: POST /api/admin/aprovar/{id}
+        const response = await fetch(`/api/admin/aprovar/${id}`, {
+            method: 'POST'
+        });
 
-                if (response.ok) {
-                    // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                    swal("Aprovado!", "Inspetor aprovado com sucesso.", "success");
-                    carregarPendentes(); // Recarrega a lista
-                } else {
-                    // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                    swal("Erro", "Erro ao aprovar o inspetor. Verifique o console.", "error");
-                }
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-                // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                swal("Erro de Conexão", "Não foi possível conectar ao servidor.", "error");
-            }
+        if (response.ok) {
+            alert('Inspetor aprovado com sucesso!');
+            carregarPendentes(); // Recarrega a lista do banco
+        } else {
+            alert('Erro ao aprovar o inspetor.');
         }
-    });
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Erro de conexão ao tentar aprovar.');
+    }
 };
 
 /**
  * NOVA FUNÇÃO: Chama a API para REJEITAR (excluir) um usuário
  * @param {number} id - O ID do usuário (vem do DTO)
  */
-window.rejeitar = function(id) {
-    // <<< MUDANÇA: Substituído o 'confirm()' por 'swal()' (com modo perigoso)
-    swal({
-        title: "Tem certeza?",
-        text: "Uma vez rejeitado, o cadastro será excluído! Esta ação não pode ser desfeita.",
-        icon: "warning",
-        buttons: {
-            cancel: "Cancelar",
-            confirm: "Rejeitar"
-        },
-        dangerMode: true, // Deixa o botão de confirmação vermelho
-    }).then(async (vaiRejeitar) => {
-        if (vaiRejeitar) {
-            try {
-                const response = await fetch(`/api/admin/rejeitar/${id}`, {
-                    method: 'POST'
-                });
+window.rejeitar = async function(id) {
+    if (!confirm('Tem certeza que deseja REJEITAR este cadastro? Esta ação não pode ser desfeita.')) {
+        return;
+    }
+    
+    try {
+        // Chama o endpoint: POST /api/admin/rejeitar/{id}
+        const response = await fetch(`/api/admin/rejeitar/${id}`, {
+            method: 'POST'
+        });
 
-                if (response.ok) {
-                    // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                    swal("Rejeitado!", "Cadastro rejeitado e excluído com sucesso.", "success");
-                    carregarPendentes(); // Recarrega a lista
-                } else {
-                    // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                    swal("Erro", "Erro ao rejeitar o cadastro.", "error");
-                }
-            } catch (error) {
-                console.error('Erro na requisição:', error);
-                // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                swal("Erro de Conexão", "Não foi possível conectar ao servidor.", "error");
-            }
+        if (response.ok) {
+            alert('Cadastro rejeitado e excluído com sucesso.');
+            carregarPendentes(); // Recarrega a lista do banco
+        } else {
+            alert('Erro ao rejeitar o cadastro.');
         }
-    });
+    } catch (error) {
+        console.error('Erro na requisição:', error);
+        alert('Erro de conexão ao tentar rejeitar.');
+    }
 };
 
 /**
@@ -118,29 +98,26 @@ window.rejeitar = function(id) {
  */
 async function carregarPendentes() {
     try {
+        // Chama o endpoint: GET /api/admin/pendentes
         const response = await fetch('/api/admin/pendentes');
         
         if (!response.ok) {
             // Se der erro 403 (Proibido), é o Spring Security bloqueando
             if(response.status === 403) {
-                 // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-                 swal("Acesso Negado", "Você não tem permissão de Administrador para ver esta página.", "error");
+                 alert('Acesso negado! Você não tem permissão de Administrador.');
             }
             throw new Error('Falha ao buscar dados do servidor.');
         }
         
+        // Guarda os dados do banco no nosso array global
         usuariosPendentes = await response.json(); 
+        
+        // Renderiza a tabela com os dados REAIS
         renderTabela(); 
         
     } catch (error) {
         console.error('Erro ao carregar usuários pendentes:', error);
-        // <<< MUDANÇA: Substituído o 'alert()' por 'swal()'
-        // Evita mostrar o alerta de permissão duas vezes
-        if (error.message.includes('403')) {
-             // O swal de permissão já foi mostrado
-        } else {
-             swal("Erro ao Carregar", "Não foi possível carregar os dados do servidor.", "error");
-        }
+        alert('Não foi possível carregar os dados do servidor.');
     }
 }
 
