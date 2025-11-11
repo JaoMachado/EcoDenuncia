@@ -36,6 +36,8 @@ public class Denuncia {
 	private String urlMidia;
 	
 	private String status;
+        
+        private boolean anonimo;
 	
 	@Column(updatable = false) // Não deve ser atualizado depois de criado
         private LocalDateTime dataCriacao;
@@ -125,6 +127,13 @@ public class Denuncia {
         this.inspetorResponsavel = inspetorResponsavel;
     }
 	
+    public boolean getAnonimo(boolean anonimo) {
+        return anonimo;
+    }
+    
+    public void setAnonimo(boolean anonimo) {
+        this.anonimo = anonimo;
+    }
     
 	
 

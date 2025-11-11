@@ -29,6 +29,7 @@
                 headers: {
                     "Content-Type": "application/json",
                 },
+                credentials: "include", // <<< ADICIONADO para sessão Spring
                 body: JSON.stringify({ email, senha }),
             });
 

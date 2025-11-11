@@ -37,8 +37,8 @@ function renderTabela(filtro = {}) {
             <td>${d.status}</td>
             <td>${d.inspetor || '-'}</td>
             <td>
-                ${d.status === 'Aguardando' ? `<button class="btn btn-sm btn-success" onclick="assumirDenuncia('${d.id}')">Assumir</button>` : ''}
-                ${d.status === 'Em tratamento' ? `<button class="btn btn-sm btn-primary" onclick="concluirDenuncia('${d.id}')">Concluir</button>` : ''}
+                ${d.status === 'PENDENTE' ? `<button class="btn btn-sm btn-success" onclick="assumirDenuncia('${d.id}')">Assumir</button>` : ''}
+                ${d.status === 'EM ANDAMENTO' ? `<button class="btn btn-sm btn-primary" onclick="concluirDenuncia('${d.id}')">Concluir</button>` : ''}
             </td>
         `;
         tbody.appendChild(tr);

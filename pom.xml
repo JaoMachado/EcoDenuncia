@@ -11,7 +11,7 @@
 	<groupId>com.ecodenuncia</groupId>
 	<artifactId>EcoDenuncia</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>EcoDenuncia</name>
+	<name>EcoDenunciaFinal</name>
 	<description>Sistema de denúncias ambientais EcoDenúncia</description>
 	<url/>
 	<licenses>
@@ -77,12 +77,19 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+    <plugins>
+        <!-- Plugin correto do Spring Boot -->
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <version>3.5.7</version>
+            <configuration>
+                <!-- Aqui indicamos explicitamente a classe principal -->
+                <mainClass>com.ecodenuncia.EcoDenunciaApplication</mainClass>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+
 
 </project>

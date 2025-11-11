@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
+    
     const usuario = JSON.parse(localStorage.getItem("usuarioLogado"));
 
     // Seletores de elementos
@@ -22,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Exibição de menus conforme o tipo de usuário
     if (!usuario) {
-        // VISITANTE → Início, Boas Práticas, Sobre
+        // VISITANTE
         menuCadastro?.classList.remove("d-none");
         menuLogin?.classList.remove("d-none");
         boxPerfil?.classList.add("d-none");
@@ -30,60 +32,71 @@ document.addEventListener("DOMContentLoaded", () => {
         menuAdministracao?.classList.add("d-none");
         menuGestao?.classList.add("d-none");
         menuEstatisticas?.classList.add("d-none");
+
     } else if (usuario.tipoUsuario === "U") {
-        // USUÁRIO → Início, Boas Práticas, Sobre, Denunciar
+        // USUÁRIO
         menuCadastro?.classList.add("d-none");
         menuLogin?.classList.add("d-none");
         boxPerfil?.classList.remove("d-none");
+        menuDenunciar?.classList.remove("d-none");
         menuAdministracao?.classList.add("d-none");
         menuGestao?.classList.add("d-none");
+        menuEstatisticas?.classList.add("d-none");
+
     } else if (usuario.tipoUsuario === "I") {
-        // INSPETOR → Início, Boas Práticas, Sobre, Denunciar, Gestão
+        // INSPETOR
         menuCadastro?.classList.add("d-none");
         menuLogin?.classList.add("d-none");
         boxPerfil?.classList.remove("d-none");
+        menuDenunciar?.classList.remove("d-none"); // Mostra Denunciar
         menuAdministracao?.classList.add("d-none");
+        menuGestao?.classList.remove("d-none"); // Mostra Gestão
+        menuEstatisticas?.classList.add("d-none");
+
     } else if (usuario.tipoUsuario === "A") {
-        // ADMIN → Tudo
+        // ADMIN (Lógica corrigida para mostrar tudo)
         menuCadastro?.classList.add("d-none");
         menuLogin?.classList.add("d-none");
         boxPerfil?.classList.remove("d-none");
-        menuAdministracao?.classList.remove("d-none");
         menuDenunciar?.classList.remove("d-none");
         menuGestao?.classList.remove("d-none");
         menuAdministracao?.classList.remove("d-none");
         menuEstatisticas?.classList.remove("d-none");
     }
 
-    // Filtro
+    // --- Filtro (Apenas na Home) ---
     const inputBusca = document.getElementById("buscaId");
     const posts = document.querySelectorAll(".feed-post");
     const mensagem = document.getElementById("mensagemVazia");
 
-    inputBusca.addEventListener("input", function () {
-        const termo = inputBusca.value.trim();
-        let algumaVisivel = false;
+    // Só roda o filtro se os elementos existirem (evita erro em outras páginas)
+    if (inputBusca && posts && mensagem) {
+        inputBusca.addEventListener("input", function () {
+            const termo = inputBusca.value.trim();
+            let algumaVisivel = false;
 
-        posts.forEach((post) => {
-            const id = post.getAttribute("data-id") || "";
+            posts.forEach((post) => {
+                const id = post.getAttribute("data-id") || "";
 
-            if (id.includes(termo)) {
-                post.classList.remove("d-none");
-                algumaVisivel = true;
+                if (id.includes(termo)) {
+                    post.classList.remove("d-none");
+                    algumaVisivel = true;
+                } else {
+                    post.classList.add("d-none");
+                }
+            });
+
+            // Mostrar ou ocultar a mensagem de "nenhuma denúncia"
+            if (algumaVisivel) {
+                mensagem.classList.add("d-none");
             } else {
-                post.classList.add("d-none");
+                mensagem.classList.remove("d-none");
             }
         });
-
-        // Mostrar ou ocultar a mensagem de "nenhuma denúncia"
-        if (algumaVisivel) {
-            mensagem.classList.add("d-none");
-        } else {
-            mensagem.classList.remove("d-none");
-        }
-    });
+    }
 
     // --- Logout (Padronizado com SweetAlert) ---
+    // Este código agora será executado, pois o filtro não vai mais quebrar o script
     const logoutBtn = document.getElementById("logoutBtn");
     if (logoutBtn) {
         logoutBtn.addEventListener("click", (e) => {
@@ -111,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
                          window.location.href = "login.html"; // Manda pro Login
                     });
                     
-                    // Garante o redirecionamento
+                    // Garante o redirecionamento caso o .then() falhe
                     setTimeout(() => { window.location.href = "login.html"; }, 2000);
                 }
             });
