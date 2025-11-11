@@ -1,6 +1,6 @@
 HELP.md
 target/
-.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
@@ -12,12 +12,14 @@ target/
 .settings
 .springBeans
 .sts4-cache
+bin/
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -28,6 +30,14 @@ target/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
+# Adições recomendadas para não subir configurações de IDE:
+nbproject/
+nb-configuration.xml
+nbactions.xml
 
 ### VS Code ###
 .vscode/
+
+### Sistema Operacional ###
+.DS_Store
+Thumbs.db

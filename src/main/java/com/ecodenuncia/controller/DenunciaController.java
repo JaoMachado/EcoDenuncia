@@ -4,7 +4,9 @@
  */
 package com.ecodenuncia.controller;
 
+import com.ecodenuncia.model.Denuncia;
 import com.ecodenuncia.model.DenunciaDTO;
+import com.ecodenuncia.repository.DenunciaRepository;
 import com.ecodenuncia.service.DenunciaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +21,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/denuncias") // A URL base será /api/denuncias
 public class DenunciaController {
-
+    @Autowired
+    private DenunciaRepository denunciaRepository;
+    
     @Autowired
     private DenunciaService denunciaService;
 
@@ -53,4 +57,11 @@ public class DenunciaController {
             return ResponseEntity.badRequest().body(null); // Retorna erro 400
         }
     }
+    @GetMapping("/buscar/{id}")
+    public ResponseEntity<DenunciaDTO> buscarPorId(@PathVariable Long id) {
+        return denunciaRepository.findById(id)
+                .map(denuncia -> ResponseEntity.ok(new DenunciaDTO(denuncia)))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
 }

@@ -4,21 +4,17 @@ let denuncias = [];
 // Função para formatar a data (o banco manda LocalDateTime, precisamos de "dd/mm/aaaa")
 function formatarData(dataISO) {
     if (!dataISO) return '-';
-    // Converte a data ISO (ex: "2025-11-05T18:30:00") para um objeto Data do JS
     const data = new Date(dataISO); 
-    // Formata para o padrão brasileiro
     return data.toLocaleDateString('pt-BR'); 
 }
 
-// A função de renderizar a tabela continua quase igual,
-// só que agora ela lê do nosso array 'denuncias' (que será preenchido pela API)
+// A função de renderizar a tabela (Não precisa de mudanças)
 function renderTabela(filtro = {}) {
     const tbody = document.querySelector('#tabelaDenuncias tbody');
     tbody.innerHTML = '';
 
     const filtradas = denuncias.filter(d => {
         if (filtro.status && d.status !== filtro.status) return false;
-        // Filtro de data: compara apenas a parte da data (ignora horas)
         if (filtro.data && !d.data.startsWith(filtro.data)) return false; 
         if (filtro.local && !d.endereco.toLowerCase().includes(filtro.local.toLowerCase())) return false;
         return true;
@@ -37,7 +33,8 @@ function renderTabela(filtro = {}) {
             <td>${d.id}</td>
             <td>${d.titulo}</td>
             <td>${d.endereco}</td>
-            <td>${formatarData(d.data)}</td> <td>${d.status}</td>
+            <td>${formatarData(d.data)}</td>
+            <td>${d.status}</td>
             <td>${d.inspetor || '-'}</td>
             <td>
                 ${d.status === 'Aguardando' ? `<button class="btn btn-sm btn-success" onclick="assumirDenuncia('${d.id}')">Assumir</button>` : ''}
@@ -48,8 +45,7 @@ function renderTabela(filtro = {}) {
     });
 }
 
-// O formulário de filtro agora só precisa re-renderizar
-// os dados que já estão no cache 'denuncias'.
+// O formulário de filtro (Não precisa de mudanças)
 $('#filtroForm').on('submit', function(e) {
     e.preventDefault();
     renderTabela({
@@ -59,58 +55,97 @@ $('#filtroForm').on('submit', function(e) {
     });
 });
 
-// <<< MUDANÇA: Função 'assumir' agora chama a API
-window.assumirDenuncia = async function(id) {
-    try {
-        const response = await fetch(`/api/denuncias/${id}/assumir`, {
-            method: 'POST'
-        });
+/**
+ * <<< MUDANÇA: Função 'assumir' agora usa swal() para confirmar
+ */
+window.assumirDenuncia = function(id) {
+    swal({
+        title: "Assumir Denúncia?",
+        text: "Você será marcado como o inspetor responsável por este caso.",
+        icon: "info",
+        buttons: {
+            cancel: "Cancelar",
+            confirm: "Assumir"
+        },
+    }).then(async (vaiAssumir) => {
+        if (vaiAssumir) {
+            try {
+                const response = await fetch(`/api/denuncias/${id}/assumir`, {
+                    method: 'POST'
+                });
 
-        if (!response.ok) {
-            throw new Error('Não foi possível assumir a denúncia.');
+                if (response.ok) {
+                    swal("Sucesso!", "Denúncia assumida com sucesso!", "success");
+                    await carregarDenuncias(); // Recarrega a tabela
+                } else {
+                    // Tenta ler a mensagem de erro do back-end
+                    const erroMsg = await response.text();
+                    swal("Erro", erroMsg || "Não foi possível assumir a denúncia.", "error");
+                }
+
+            } catch (error) {
+                console.error(error);
+                swal("Erro de Conexão", "Não foi possível conectar ao servidor.", "error");
+            }
         }
-
-        alert('Denúncia assumida com sucesso!');
-        // Atualiza a lista inteira do banco para garantir
-        await carregarDenuncias(); 
-
-    } catch (error) {
-        alert(error.message);
-    }
+    });
 };
 
-// <<< MUDANÇA: Função 'concluir' agora chama a API
-window.concluirDenuncia = async function(id) {
-    try {
-        const response = await fetch(`/api/denuncias/${id}/concluir`, {
-            method: 'POST'
-        });
+/**
+ * <<< MUDANÇA: Função 'concluir' agora usa swal() para confirmar
+ */
+window.concluirDenuncia = function(id) {
+    swal({
+        title: "Concluir Denúncia?",
+        text: "Tem certeza que deseja marcar esta denúncia como 'Concluída'?",
+        icon: "warning",
+        buttons: {
+            cancel: "Cancelar",
+            confirm: "Concluir"
+        },
+    }).then(async (vaiConcluir) => {
+        if (vaiConcluir) {
+            try {
+                const response = await fetch(`/api/denuncias/${id}/concluir`, {
+                    method: 'POST'
+                });
 
-        if (!response.ok) {
-            throw new Error('Não foi possível concluir a denúncia.');
+                if (response.ok) {
+                    swal("Concluída!", "Denúncia marcada como concluída!", "success");
+                    await carregarDenuncias(); // Recarrega a tabela
+                } else {
+                    const erroMsg = await response.text();
+                    swal("Erro", erroMsg || "Não foi possível concluir a denúncia.", "error");
+                }
+            } catch (error) {
+                console.error(error);
+                swal("Erro de Conexão", "Não foi possível conectar ao servidor.", "error");
+            }
         }
-
-        alert('Denúncia marcada como concluída!');
-        // Atualiza a lista inteira do banco
-        await carregarDenuncias();
-
-    } catch (error) {
-        alert(error.message);
-    }
+    });
 };
 
-// <<< MUDANÇA: Nova função para carregar dados da API
+/**
+ * <<< MUDANÇA: Função de carregar agora usa swal() para erros
+ */
 async function carregarDenuncias() {
     try {
         const response = await fetch('/api/denuncias');
         if (!response.ok) {
-            throw new Error('Falha ao carregar denúncias.');
+            // Se der erro 403 (Proibido), é o Spring Security bloqueando
+            if(response.status === 403) {
+                 swal("Acesso Negado", "Você não tem permissão de Gestor ou Admin para ver esta página.", "error");
+            }
+            throw new Error('Falha ao carregar denúncias. Status: ' + response.status);
         }
-        denuncias = await response.json(); // Salva os dados no nosso cache global
+        denuncias = await response.json(); // Salva os dados no cache global
         renderTabela(); // Renderiza a tabela com os dados do banco
     } catch (error) {
         console.error(error);
-        alert('Erro ao carregar dados do servidor.');
+        // Evita mostrar o alerta de permissão duas vezes
+        if (!error.message.includes('403')) {
+             swal('Erro ao Carregar', 'Erro ao carregar dados do servidor.', 'error');
+        }
     }
 }
 
