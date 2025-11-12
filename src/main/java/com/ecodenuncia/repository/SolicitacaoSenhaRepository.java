@@ -9,5 +9,6 @@ import java.util.Optional;
 public interface SolicitacaoSenhaRepository extends JpaRepository<Solicitacao_senhas, Long> {
     boolean existsByToken(String token);
     Optional<Solicitacao_senhas> findByToken(String token); 
+    void deleteByUsuarioId(Long usuarioId);
 }
 

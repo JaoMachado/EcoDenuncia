@@ -4,12 +4,16 @@
  */
 package com.ecodenuncia.service;
 
+import com.ecodenuncia.model.AlterarSenhaPerfilRequest;
 import com.ecodenuncia.model.Solicitacao_senhas;
 import com.ecodenuncia.model.Solicitacao_senhas.StatusSolicitacao;
 import com.ecodenuncia.model.Usuario;
+import com.ecodenuncia.model.UsuarioPerfilAtualizacaoDTO;
+import com.ecodenuncia.model.UsuarioPerfilDTO;
 import com.ecodenuncia.model.UsuarioPendenteDTO;
 import com.ecodenuncia.repository.UsuarioRepository;
 import com.ecodenuncia.repository.SolicitacaoSenhaRepository;
+import com.ecodenuncia.repository.DenunciaRepository;
 
 import java.time.LocalDateTime;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +28,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 /**
  *
@@ -38,6 +43,8 @@ public class UsuarioService {
     @Autowired
     private SolicitacaoSenhaRepository solicitacaoSenhaRepository;
 
+    @Autowired
+    private DenunciaRepository denunciaRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -166,6 +173,100 @@ public class UsuarioService {
 
 
     
+
+    @Transactional(readOnly = true)
+    public UsuarioPerfilDTO buscarPerfil(Long id) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+        return new UsuarioPerfilDTO(usuario);
+    }
+
+    @Transactional
+    public UsuarioPerfilDTO atualizarPerfil(Long id, UsuarioPerfilAtualizacaoDTO dados) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        String nome = dados.getNomeRazaoSocial().trim();
+        if (!StringUtils.hasText(nome)) {
+            throw new IllegalArgumentException("Informe um nome ou razão social válido.");
+        }
+
+        String celularApenasDigitos = somenteDigitos(dados.getCelular());
+        if (celularApenasDigitos.length() < 10 || celularApenasDigitos.length() > 11) {
+            throw new IllegalArgumentException("Número de celular inválido. Utilize DDD + número com 10 ou 11 dígitos.");
+        }
+
+        String endereco = dados.getEndereco().trim();
+        if (!StringUtils.hasText(endereco)) {
+            throw new IllegalArgumentException("O endereço é obrigatório.");
+        }
+
+        String tipoPessoa = dados.getTipoPessoa().toUpperCase();
+        String tipoUsuario = dados.getTipoUsuario().toUpperCase();
+
+        String mensagemCapacitacao = dados.getMensagemCapacitacao();
+        if ("I".equals(tipoUsuario)) {
+            if (!StringUtils.hasText(mensagemCapacitacao)) {
+                throw new IllegalArgumentException("A mensagem de capacitação é obrigatória para perfis de Inspetor.");
+            }
+            if (mensagemCapacitacao.length() > 500) {
+                throw new IllegalArgumentException("A mensagem de capacitação deve ter no máximo 500 caracteres.");
+            }
+        } else {
+            mensagemCapacitacao = null;
+        }
+
+        usuario.setNomeRazaoSocial(nome);
+        usuario.setTipoPessoa(tipoPessoa);
+        usuario.setTipoUsuario(tipoUsuario);
+        usuario.setCelular(celularApenasDigitos);
+        usuario.setEndereco(endereco);
+        usuario.setMensagemCapacitacao(mensagemCapacitacao);
+
+        Usuario salvo = usuarioRepository.save(usuario);
+        return new UsuarioPerfilDTO(salvo);
+    }
+
+    @Transactional
+    public void atualizarSenha(Long id, AlterarSenhaPerfilRequest request) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        if (!passwordEncoder.matches(request.getSenhaAtual(), usuario.getSenha())) {
+            throw new IllegalArgumentException("Senha atual incorreta.");
+        }
+
+        if (!StringUtils.hasText(request.getNovaSenha()) || request.getNovaSenha().length() < 6) {
+            throw new IllegalArgumentException("A nova senha deve conter ao menos 6 caracteres.");
+        }
+
+        usuario.setSenha(passwordEncoder.encode(request.getNovaSenha()));
+        usuarioRepository.save(usuario);
+    }
+
+    @Transactional
+    public void excluirPerfil(Long id, String senhaAtual) {
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado!"));
+
+        if (!passwordEncoder.matches(senhaAtual, usuario.getSenha())) {
+            throw new IllegalArgumentException("Senha informada não confere com a senha atual.");
+        }
+
+        long denunciasDoUsuario = denunciaRepository.countByUsuarioDenuncianteId(id)
+                + denunciaRepository.countByInspetorResponsavelId(id);
+
+        if (denunciasDoUsuario > 0) {
+            throw new IllegalArgumentException("Não é possível excluir o perfil porque existem denúncias vinculadas ao usuário.");
+        }
+
+        solicitacaoSenhaRepository.deleteByUsuarioId(id);
+        usuarioRepository.delete(usuario);
+    }
+
+    private String somenteDigitos(String valor) {
+        return valor == null ? "" : valor.replaceAll("\\D", "");
+    }
 
    
 

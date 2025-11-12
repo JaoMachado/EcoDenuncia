@@ -127,14 +127,16 @@ public class Denuncia {
         this.inspetorResponsavel = inspetorResponsavel;
     }
 	
-    public boolean getAnonimo(boolean anonimo) {
+    public boolean isAnonimo() {
         return anonimo;
     }
-    
+
+    public boolean getAnonimo() {
+        return anonimo;
+    }
+
     public void setAnonimo(boolean anonimo) {
         this.anonimo = anonimo;
     }
-    
-	
 
 }

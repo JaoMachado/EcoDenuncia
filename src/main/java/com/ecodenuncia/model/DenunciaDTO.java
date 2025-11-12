@@ -6,6 +6,8 @@ package com.ecodenuncia.model;
 
 import java.time.LocalDateTime;
 
+import org.springframework.util.StringUtils;
+
 /**
  *
  * @author João Pedro Machado
@@ -17,6 +19,10 @@ public class DenunciaDTO {
     private LocalDateTime data; // No JS é 'data', na Entidade é 'dataCriacao'
     private String status;
     private String inspetor; // No JS é 'inspetor', na Entidade é 'inspetorResponsavel' (um Objeto)
+    private String denunciante;
+    private String mensagem;
+    private String midia;
+    private boolean anonimo;
 
     // Construtor para facilitar a conversão
     public DenunciaDTO(Denuncia denuncia) {
@@ -25,12 +31,23 @@ public class DenunciaDTO {
         this.endereco = denuncia.getLocalizacao(); // De/Para
         this.data = denuncia.getDataCriacao();     // De/Para
         this.status = denuncia.getStatus();
+        this.mensagem = denuncia.getDescricao();
+    this.midia = resolverUrlMidia(denuncia.getUrlMidia());
+        this.anonimo = denuncia.isAnonimo();
         
         // Lógica para pegar só o NOME do inspetor
         if (denuncia.getInspetorResponsavel() != null) {
             this.inspetor = denuncia.getInspetorResponsavel().getNomeRazaoSocial();
         } else {
             this.inspetor = null; // Ou "-"
+        }
+
+        if (this.anonimo) {
+            this.denunciante = "Anônimo";
+        } else if (denuncia.getUsuarioDenunciante() != null) {
+            this.denunciante = denuncia.getUsuarioDenunciante().getNomeRazaoSocial();
+        } else {
+            this.denunciante = "";
         }
     }
     
@@ -48,4 +65,33 @@ public class DenunciaDTO {
     public void setStatus(String status) { this.status = status; }
     public String getInspetor() { return inspetor; }
     public void setInspetor(String inspetor) { this.inspetor = inspetor; }
+    public String getDenunciante() { return denunciante; }
+    public void setDenunciante(String denunciante) { this.denunciante = denunciante; }
+    public String getMensagem() { return mensagem; }
+    public void setMensagem(String mensagem) { this.mensagem = mensagem; }
+    public String getMidia() { return midia; }
+    public void setMidia(String midia) { this.midia = midia; }
+    public boolean isAnonimo() { return anonimo; }
+    public void setAnonimo(boolean anonimo) { this.anonimo = anonimo; }
+
+    private String resolverUrlMidia(String urlMidia) {
+        if (!StringUtils.hasText(urlMidia)) {
+            return null;
+        }
+
+        String valor = urlMidia.trim();
+        if (valor.startsWith("http") || valor.startsWith("data:")) {
+            return valor;
+        }
+
+        if (valor.startsWith("/uploads/")) {
+            return valor;
+        }
+
+        if (valor.toLowerCase().startsWith("uploads/")) {
+            return "/" + valor.replaceAll("^/+", "");
+        }
+
+        return "/uploads/" + valor.replaceAll("^/+", "");
+    }
 }

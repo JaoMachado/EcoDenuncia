@@ -15,5 +15,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DenunciaRepository extends JpaRepository<Denuncia, Long>{
-    
+	long countByUsuarioDenuncianteId(Long usuarioId);
+	long countByInspetorResponsavelId(Long usuarioId);
 }
